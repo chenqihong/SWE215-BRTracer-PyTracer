@@ -12,9 +12,11 @@ def create_ticket_embedding(ticket_info_dict):
 
 
 def create_source_code_embedding(ticket_repos_dict):
+    make_folder(source_code_embedding_collection_dir)
     for ticket_id in ticket_repos_dict:
         target_repo_list = ticket_repos_dict[ticket_id]
         for repo_name in target_repo_list:
+            make_folder(os.path.join(source_code_embedding_collection_dir, repo_name))
             repo_dir = os.path.join(all_repos_root_dir, repo_name)
             source_code_list = extract_source_code_list(repo_dir)
             for source_code_file_dir in tqdm(source_code_list, desc="create embedding for source code"):
@@ -85,4 +87,4 @@ if __name__ == '__main__':
         print("Start evaluating")
         performance_dict = evaluation(target_tickets_list)
         for ticket_id in performance_dict:
-            print("Ticket ID: " + ticket_id + " score: " + performance_dict[ticket_id])
+            print("Ticket ID: ", ticket_id, " score: ", performance_dict[ticket_id])

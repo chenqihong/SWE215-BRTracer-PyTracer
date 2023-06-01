@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/AddressServices" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/AgentLocatorV1Service" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/JOSS-0.9.9" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/QE-AfterSalesReturns" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/QE-Aftersales-Returns-Redesign" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/ReturnAdm" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/ReturnBes" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/ReturnDomain" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/ReturnManagementServiceV1" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/ReturnRestSvcV1" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/ReturnServiceV1MigV3" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/ReturnSvc" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/ReturnsAPI" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/ReturnsSellerDispositionService" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/ReturnsServer" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/ReturnsUI" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/RtnStorageServiceV1" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/Seller-Disposition" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/ServiceConsumers" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/amlcmgwsvc" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/returnexpsvc" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/returnserviceio" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/rtnpolsvc" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/all_repos/rtnprmsvc" vcs="Git" />
+  </component>
+</project>

@@ -31,13 +31,38 @@ def make_folder(file_dir):
         pass
 
 
-def build_source_code_nl_embedding(content, embed_mode="code"):
-    tokens = tokenizer.tokenize(content)
-    if len(tokens) >= 510:
-        tokens = tokens[:510]
-    tokens = [tokenizer.cls_token] + tokens + [tokenizer.eos_token]
-    tokens_ids = tokenizer.convert_tokens_to_ids(tokens)
-    return model(torch.tensor(tokens_ids)[None, :])[0]
+def build_source_code_nl_embedding(content: str) -> torch.Tensor:
+    """
+    Building the embedding of the given source code
+    :param content: The content to embed
+    :return: The embedding
+    """
+    code_tokens = tokenizer.tokenize(content)
+    cls_token_id, eos_token_id = [0], [2]
+    context_embeddings_list = list()
+    total_len = len(code_tokens)
+    for round_time in range(int(total_len/510) + 1):
+        low_index, high_index = 510* round_time, 510*round_time+510
+        if high_index >= total_len:
+            high_index = total_len
+        if high_index == low_index:
+            continue
+        tokens_ids = tokenizer.convert_tokens_to_ids(code_tokens[low_index:high_index])
+        tokens_ids = cls_token_id + tokens_ids + eos_token_id
+        if len(tokens_ids) == 512 or round_time == 0:
+            context_embeddings_list.append(model(torch.tensor(tokens_ids)[None, :])[0])
+    if len(context_embeddings_list) == 0:
+        return torch.Tensor([])
+    return torch.cat(context_embeddings_list, dim=1)
+
+
+# def build_source_code_nl_embedding(content, embed_mode="code"):
+#     tokens = tokenizer.tokenize(content)
+#     if len(tokens) >= 510:
+#         tokens = tokens[:510]
+#     tokens = [tokenizer.cls_token] + tokens + [tokenizer.eos_token]
+#     tokens_ids = tokenizer.convert_tokens_to_ids(tokens)
+#     return model(torch.tensor(tokens_ids)[None, :])[0]
 
 
 def build_embedding_save_name(ticket_id_file_dir, mode):
@@ -78,25 +103,29 @@ def extract_methods(java_code):
     methods = []
     lines = java_code.split('\n')
     i = 0
-    while i < len(lines):
-        line = lines[i].strip()
-        if line.startswith('public') or line.startswith('private') or line.startswith('protected'):
-            method_signature = line
-            method_body = ''
-            i += 1
-            while i < len(lines) and not lines[i].strip().endswith('}'):
-                method_body += lines[i] + '\n'
+    try:
+        while i < len(lines):
+            line = lines[i].strip()
+            if line.startswith('public') or line.startswith('private') or line.startswith('protected'):
+                method_signature = line
+                method_body = ''
                 i += 1
-            method_body += lines[i]
-            method = method_signature + '\n' + method_body
-            methods.append(method)
-        i += 1
+                while i < len(lines) and not lines[i].strip().endswith('}'):
+                    method_body += lines[i] + '\n'
+                    i += 1
+                method_body += lines[i]
+                method = method_signature + '\n' + method_body
+                methods.append(method)
+            i += 1
+    except IndexError:
+        return [java_code]
     return methods
 
 
 def find_close_segment_embed(source_code_file_dir, ticket_id, repo_name):
     with open(source_code_file_dir, 'r') as f:
         file_content = f.read()
+    print("doing source code file = ", source_code_file_dir)
     method_list = extract_methods(file_content)
     current_closeness = -1
     current_method_imp = ""
@@ -113,7 +142,7 @@ def find_close_segment_embed(source_code_file_dir, ticket_id, repo_name):
 def load_tickets_solution(target_tickets_list):
     ticket_solution_dict = defaultdict(list)
     for ticket_id in target_tickets_list:
-        ticket_solution_file_dir = os.path.join(ticket_solution_dir, ticket_id, ".csv")
+        ticket_solution_file_dir = os.path.join(ticket_solution_dir, ticket_id + ".csv")
         ticket_solution_file_dir_list = list()
         with open(ticket_solution_file_dir, 'r') as f:
             reader = csv.reader(f)
@@ -131,8 +160,7 @@ def load_ticket_answer_list(ticket_id):
     with open(ans_dir, 'r') as f:
         for line in f:
             file_dir = eval(line.strip())[1].strip()
-            current_repo = file_dir.split('/')[1].strip()
-            answer_list.append(current_repo)
+            answer_list.append(file_dir[1:])
     return answer_list[::-1]
 
 
