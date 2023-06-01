@@ -21,7 +21,7 @@ def create_source_code_embedding(ticket_repos_dict):
             source_code_list = extract_source_code_list(repo_dir)
             for source_code_file_dir in tqdm(source_code_list, desc="create embedding for source code"):
                 source_code_partial_dir = source_code_file_dir.replace(all_repos_root_dir, "")
-                if source_code_partial_dir in black_list_file:
+                if source_code_file_dir in black_list_file:
                     continue
                 embed_save_name = build_embedding_save_name(source_code_partial_dir, "code")
                 save_dir = os.path.join(source_code_embedding_collection_dir, repo_name, embed_save_name)

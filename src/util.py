@@ -124,6 +124,7 @@ def extract_methods(java_code):
 
 def find_close_segment_embed(source_code_file_dir, ticket_id, repo_name):
     with open(source_code_file_dir, 'r') as f:
+        print("\nreading file: ", source_code_file_dir)
         file_content = f.read()
     print("doing source code file = ", source_code_file_dir)
     method_list = extract_methods(file_content)
