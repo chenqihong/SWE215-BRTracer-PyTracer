@@ -11,3 +11,5 @@ all_repos/: folder contains all repos
 
 
 Final similarity results are in: ranked_results: one ticket per txt file, similarities are ranked from smallest to largest.
+
+If first time usage: change is_building in config.py to True
