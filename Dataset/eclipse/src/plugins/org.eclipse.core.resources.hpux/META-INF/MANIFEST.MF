@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %hpuxFragmentName
+Bundle-SymbolicName: org.eclipse.core.resources.hpux
+Bundle-Version: 3.1.0
+Bundle-Vendor: %providerName
+Fragment-Host: org.eclipse.core.resources;bundle-version="[3.1.0,4.0.0)"
+Bundle-Localization: plugin
+Eclipse-PlatformFilter: (osgi.os=hpux)

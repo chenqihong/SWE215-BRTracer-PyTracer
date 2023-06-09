@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- build script to create a batch compiler from org.eclipse.jdt.core -->
+<project name="Compile ecj with javac" default="compile">
+	<target name="init">
+		<tstamp/>
+		<property name="srcdir" value="src" />
+		<property name="destdir" value="compiler" />
+   	    <unzip src="${srcdir}/ecj.zip" dest="${srcdir}"/>
+	</target>
+
+	<target name="compile" depends="init">
+		
+	 	<echo message="TARGET: ${destdir}" />
+		<delete dir="${destdir}"/>
+		<mkdir dir="${destdir}"/>
+
+        <property name="compilerArg" value="-encoding ISO-8859-1" />
+        <property name="javacSource" value="1.3" />
+        <property name="javacTarget" value="1.2" />
+        <property name="javacDebugInfo" value="on" />
+        <property name="javacFailOnError" value="true" />
+		
+        <record name="compilelog.txt" action="start" />
+        <javac verbose="true" 
+               target="${javacTarget}" 
+               source="${javacSource}"
+               srcdir="${srcdir}" 
+               destdir="${destdir}"
+               debug="${javacDebugInfo}"
+               failonerror="${javacFailOnError}">
+	    	   <compilerarg line="${compilerArg}"/>
+        </javac>
+        <record name="compilelog.txt" action="stop" />   
+
+        <echo message="UPDATE ecj.jar" />
+             <copy todir="${destdir}">
+                  <fileset dir="${srcdir}">
+                       <include name="**/*.properties"/>
+                       <include name="**/*.rsc"/>
+                       <exclude name="**/ecj.zip"/>
+                   </fileset> 
+             </copy> 
+        <jar jarfile="ecj.jar">
+             <fileset dir="${destdir}"/>
+        </jar> 
+
+	</target>
+</project>

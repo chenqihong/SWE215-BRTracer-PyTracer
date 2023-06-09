@@ -1,0 +1,629 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Assemble org.eclipse.sdk" default="main">
+	<property name="archiveName" value="org.eclipse.sdk-${buildId}-macosx.carbon.ppc.tar.gz"/>
+	<property name="os" value="macosx"/>
+	<property name="ws" value="carbon"/>
+	<property name="arch" value="ppc"/>
+	<property name="assemblyTempDir" value="${buildDirectory}/tmp"/>
+	<property name="eclipse.base" value="${assemblyTempDir}/${collectingFolder}"/>
+	<property name="eclipse.plugins" value="${eclipse.base}/plugins"/>
+	<property name="eclipse.features" value="${eclipse.base}/features"/>
+	<property name="archiveFullPath" value="${basedir}/${buildLabel}/${archiveName}"/>
+	<property name="tarargs" value=""/>
+	<!-- Beginning of the jarUp task -->
+	<target name="jarUp" description="Create a jar from the given location.">
+		<available property="${source}/${elementName}_exists" file="${source}/${elementName}"/>
+		<antcall target="jarIng">
+			<param name="source" value="${source}"/>
+			<param name="elementName" value="${elementName}"/>
+		</antcall>
+	</target>
+	<target name="jarIng" if="${source}/${elementName}_exists">
+		<zip destfile="${source}/${elementName}.jar" basedir="${source}/${elementName}" filesonly="false" whenempty="skip" update="false"/>
+		<delete dir="${source}/${elementName}"/>
+	</target>
+	<!-- End of the jarUp task -->
+	<!-- Beginning of the jar signing  target -->
+	<target name="jarSigning" description="Sign a jar.">
+		<signjar jar="${source}/${elementName}.jar" alias="${sign.alias}" keystore="${sign.keystore}" storepass="${sign.storepass}"/>
+	</target>
+	<!-- End of the jarUp task -->
+	<target name="main">
+		<condition property="pluginArchivePrefix" value="plugins">
+			<equals arg1="${archivePrefix}"  arg2="" trim="true"/>
+		</condition>
+		<property name="pluginArchivePrefix" value="${archivePrefix}/plugins"/>
+
+		<condition property="featureArchivePrefix" value="features">
+			<equals arg1="${archivePrefix}"  arg2="" trim="true"/>
+		</condition>
+		<property name="featureArchivePrefix" value="${archivePrefix}/features"/>
+
+		<dirname property="archiveParentFolder" file="${archiveFullPath}"/>
+		<mkdir dir="${archiveParentFolder}"/>
+		<mkdir dir="${assemblyTempDir}"/>
+		<mkdir dir="${buildLabel}"/>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.compare" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.pde.build" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.platform.source" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.ltk.core.refactoring" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.jdt.ui" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.rcp" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.ui.externaltools" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.ui.console" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.ltk.ui.refactoring" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.core.commands" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.ui" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.jdt" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.jdt.source.macosx.carbon.ppc" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.team.cvs.core" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.osgi.services" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.jdt.debug.ui" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.jdt.junit.runtime" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.pde.runtime" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.swt" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.core.filebuffers" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.core.runtime.compatibility" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.tomcat" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.ui.workbench.texteditor" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.rcp.source.macosx.carbon.ppc" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.team.ui" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.help.appserver" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.platform" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.jdt.launching" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.ui.workbench" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.rcp.source" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.jdt.doc.isv" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.team.cvs.ui" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.core.resources.compatibility" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.debug.core" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.pde.ui" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.jdt.launching.macosx" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.ui.views" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.osgi.util" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.search" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.debug.ui" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.platform.doc.isv" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.jdt.doc.user" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.platform.source.macosx.carbon.ppc" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.ui.ide" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.jdt.source" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.help" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.core.variables" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.pde.doc.user" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.pde" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.jdt.core" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.ui.intro" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.ant.core" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.junit" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.help.base" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.jface" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.jface.text" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.update.configurator" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.apache.ant" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.osgi" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.update.core" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.text" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.apache.lucene" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.ui.forms" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.team.cvs.ssh2" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.core.runtime" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.jdt.junit" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.platform.doc.user" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.core.expressions" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.help.ui" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.ui.editors" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.update.scheduler" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.core.resources" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.jdt.debug" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.pde.source" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.ui.presentations.r21" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.team.cvs.ssh" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.ui.workbench.compatibility" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.team.core" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.ui.carbon" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.pde.junit.runtime" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.update.ui" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.swt.carbon.macosx.ppc" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.sdk" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.ui.cheatsheets" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.ant.ui" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.core.boot" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.pde.core" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.help.webapp" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.core.resources.macosx" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="plugins/org.eclipse.ui.browser" target="gather.bin.parts">
+			<property name="destination.temp.folder" value="${eclipse.plugins}"/>
+		</ant>
+		<ant antfile="build.xml" dir="features/org.eclipse.rcp/" target="gather.bin.parts">
+			<property name="feature.base" value="${eclipse.base}"/>
+		</ant>
+		<ant antfile="build.xml" dir="features/org.eclipse.platform/" target="gather.bin.parts">
+			<property name="feature.base" value="${eclipse.base}"/>
+		</ant>
+		<ant antfile="build.xml" dir="features/org.eclipse.rcp.source/" target="gather.bin.parts">
+			<property name="feature.base" value="${eclipse.base}"/>
+		</ant>
+		<ant antfile="build.xml" dir="features/org.eclipse.platform.source/" target="gather.bin.parts">
+			<property name="feature.base" value="${eclipse.base}"/>
+		</ant>
+		<ant antfile="build.xml" dir="features/org.eclipse.jdt/" target="gather.bin.parts">
+			<property name="feature.base" value="${eclipse.base}"/>
+		</ant>
+		<ant antfile="build.xml" dir="features/org.eclipse.jdt.source/" target="gather.bin.parts">
+			<property name="feature.base" value="${eclipse.base}"/>
+		</ant>
+		<ant antfile="build.xml" dir="features/org.eclipse.pde/" target="gather.bin.parts">
+			<property name="feature.base" value="${eclipse.base}"/>
+		</ant>
+		<ant antfile="build.xml" dir="features/org.eclipse.pde.source/" target="gather.bin.parts">
+			<property name="feature.base" value="${eclipse.base}"/>
+		</ant>
+		<ant antfile="build.xml" dir="features/org.eclipse.sdk/" target="gather.bin.parts">
+			<property name="feature.base" value="${eclipse.base}"/>
+		</ant>
+		<ant antfile="build.xml" dir="features/org.eclipse.rcp/" target="gather.bin.parts">
+			<property name="feature.base" value="${eclipse.base}"/>
+		</ant>
+		<ant antfile="build.xml" dir="features/org.eclipse.platform/" target="gather.bin.parts">
+			<property name="feature.base" value="${eclipse.base}"/>
+		</ant>
+		<ant antfile="build.xml" dir="features/org.eclipse.jdt/" target="gather.bin.parts">
+			<property name="feature.base" value="${eclipse.base}"/>
+		</ant>
+		<ant antfile="build.xml" dir="features/org.eclipse.sdk/" target="gather.bin.parts">
+			<property name="feature.base" value="${eclipse.base}"/>
+		</ant>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.compare_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ltk.core.refactoring_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.ui_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.rcp_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.externaltools_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.console_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ltk.ui.refactoring_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.commands_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.team.cvs.core_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.osgi.services_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.debug.ui_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.runtime_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.swt_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.filebuffers_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.runtime.compatibility_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.workbench.texteditor_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.team.ui_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.help.appserver_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.launching_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.workbench_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.team.cvs.ui_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.resources.compatibility_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.debug.core_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.ui_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.launching.macosx_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.views_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.osgi.util_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.search_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.debug.ui_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.ide_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.help_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.variables_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jdt.core_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.intro_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ant.core_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.help.base_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jface_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.jface.text_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.update.configurator_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.osgi_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.update.core_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.text_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.forms_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.runtime_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.expressions_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.help.ui_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.editors_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.update.scheduler_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.resources_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.presentations.r21_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.team.cvs.ssh_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.team.core_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.carbon_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.update.ui_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.swt.carbon.macosx.ppc_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.cheatsheets_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ant.ui_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.boot_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.pde.core_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.core.resources.macosx_3.1.0"/>
+		</antcall>
+		<antcall target="jarUp">
+			<param name="source" value="${eclipse.plugins}"/>
+			<param name="elementName" value="org.eclipse.ui.browser_3.1.0"/>
+		</antcall>
+		<eclipse.brand root="${eclipse.base}/macosx.carbon.ppc/${collectingFolder}" icons="${launcherIcons}" name="${launcherName}" os="${os}"		/>
+		<exec executable="cp" dir="${basedir}">
+			<arg line="-r '${assemblyTempDir}/${collectingFolder}/macosx.carbon.ppc/${collectingFolder}' '${assemblyTempDir}'"/>
+		</exec>
+		<exec executable="rm" dir="${basedir}">
+			<arg line="-rf '${assemblyTempDir}/${collectingFolder}/macosx.carbon.ppc'"/>
+		</exec>
+		<exec executable="tar" dir="${assemblyTempDir}">
+			<arg line="${tarargs}-cvf '${archiveFullPath}' ${archivePrefix} "/>
+		</exec>
+		<move file="${archiveFullPath}" tofile="${assemblyTempDir}/${collectingFolder}/tmp.tar"/>
+		<gzip src="${assemblyTempDir}/${collectingFolder}/tmp.tar" zipfile="${archiveFullPath}"/>
+		<exec executable="rm">
+			<arg line="-rf"/>
+			<arg line="'${assemblyTempDir}'"/>
+		</exec>
+		<delete dir="${assemblyTempDir}"/>
+	</target>
+</project>
