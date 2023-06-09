@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.eclipse.jdt.ui" default="build.jars" basedir=".">
+
+	<property name="basews" value="${ws}"/>
+	<property name="baseos" value="${os}"/>
+	<property name="basearch" value="${arch}"/>
+	<property name="basenl" value="${nl}"/>
+
+	<!-- Compiler settings. -->
+	<property name="javacFailOnError" value="false"/>
+	<property name="javacDebugInfo" value="on"/>
+	<property name="javacVerbose" value="true"/>
+	<property name="javacSource" value="1.3"/>
+	<property name="javacTarget" value="1.2"/>
+	<property name="compilerArg" value=""/>
+	<path id="path_bootclasspath">
+		<fileset dir="${java.home}/lib">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	<property name="bootclasspath" refid="path_bootclasspath"/>
+
+	<target name="init" depends="properties">
+		<condition property="pluginTemp" value="${buildTempFolder}/plugins">
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="pluginTemp" value="${basedir}"/>
+		<condition property="build.result.folder" value="${pluginTemp}/org.eclipse.jdt.ui">
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="build.result.folder" value="${basedir}"/>
+		<property name="temp.folder" value="${basedir}/temp.folder"/>
+		<property name="plugin.destination" value="${basedir}"/>
+	</target>
+
+	<target name="properties" if="eclipse.running">
+		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+
+	</target>
+
+	<target name="build.update.jar" depends="init" description="Build the plug-in: org.eclipse.jdt.ui for an update site.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<zip destfile="${plugin.destination}/org.eclipse.jdt.ui_3.1.0.jar" basedir="${temp.folder}/org.eclipse.jdt.ui_3.1.0" filesonly="false" whenempty="skip" update="false"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="serialsupport.jar" depends="init" unless="serialsupport.jar" description="Create jar: org.eclipse.jdt.ui serialsupport.jar.">
+		<delete dir="${temp.folder}/serialsupport.jar.bin"/>
+		<mkdir dir="${temp.folder}/serialsupport.jar.bin"/>
+		<!-- compile the source code -->
+		<javac destdir="${temp.folder}/serialsupport.jar.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bootclasspath}" source="${javacSource}" target="${javacTarget}"		>
+			<compilerarg line="${compilerArg}"/>
+			<classpath>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui/@dot"/>
+				<pathelement path="../org.eclipse.ui.carbon/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.carbon/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.runtime/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.osgi/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.help/@dot"/>
+				<pathelement path="../org.eclipse.swt/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt/@dot"/>
+				<pathelement path="../org.eclipse.swt.gtk.linux.x86_64/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.linux.x86_64/@dot"/>
+				<pathelement path="../org.eclipse.swt.win32.win32.x86/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.win32.win32.x86/@dot"/>
+				<pathelement path="../org.eclipse.swt.gtk.linux.x86/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.linux.x86/@dot"/>
+				<pathelement path="../org.eclipse.swt.gtk.solaris.sparc/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.solaris.sparc/@dot"/>
+				<pathelement path="../org.eclipse.swt.gtk.linux.ppc/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.linux.ppc/@dot"/>
+				<pathelement path="../org.eclipse.swt.carbon.macosx.ppc/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.carbon.macosx.ppc/@dot"/>
+				<pathelement path="../org.eclipse.swt.motif.aix.ppc/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.motif.aix.ppc/@dot"/>
+				<pathelement path="../org.eclipse.swt.motif.hpux.PA_RISC/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.motif.hpux.PA_RISC/@dot"/>
+				<pathelement path="../org.eclipse.swt.motif.linux.x86/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.motif.linux.x86/@dot"/>
+				<pathelement path="../org.eclipse.swt.gtk.linux.ia64/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.linux.ia64/@dot"/>
+				<pathelement path="../org.eclipse.swt.motif.solaris.sparc/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.motif.solaris.sparc/@dot"/>
+				<pathelement path="../org.eclipse.swt.photon.qnx.x86/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.photon.qnx.x86/@dot"/>
+				<pathelement path="../org.eclipse.swt.motif.hpux.ia64_32/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.motif.hpux.ia64_32/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.jface/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.commands/bin/"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.commands/@dot"/>
+				<pathelement path="../org.eclipse.ui.workbench/compatibility.jar"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.workbench/compatibility.jar"/>
+				<pathelement path="../org.eclipse.ui.workbench/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.workbench/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.workbench.compatibility/compatibility.jar"/>
+				<pathelement path="../org.eclipse.ui.workbench.compatibility/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.workbench.compatibility/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.expressions/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.resources/@dot"/>
+				<pathelement path="../org.eclipse.core.resources.compatibility/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.resources.compatibility/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.resources.compatibility/bin/"/>
+				<pathelement path="../org.eclipse.core.resources.hpux/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.resources.hpux/@dot"/>
+				<pathelement path="../org.eclipse.core.resources.linux/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.resources.linux/@dot"/>
+				<pathelement path="../org.eclipse.core.resources.macosx/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.resources.macosx/@dot"/>
+				<pathelement path="../org.eclipse.core.resources.qnx/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.resources.qnx/@dot"/>
+				<pathelement path="../org.eclipse.core.resources.win32/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.resources.win32/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.resources.win32/bin/"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.runtime.compatibility/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.update.configurator/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ant.core/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.variables/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.console/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.jface.text/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.text/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.workbench.texteditor/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.jdt.core/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.team.core/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.search/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.ide/@dot"/>
+				<pathelement path="../org.eclipse.ui.win32/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.win32/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.views/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.update.core/@dot"/>
+				<pathelement path="../org.eclipse.update.core.linux/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.update.core.linux/@dot"/>
+				<pathelement path="../org.eclipse.update.core.win32/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.update.core.win32/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.update.ui/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.forms/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.editors/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.filebuffers/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.debug.core/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.debug.ui/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.jdt.launching/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.jdt.debug/jdi.jar"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.jdt.debug/jdimodel.jar"/>
+				<pathelement path="../org.eclipse.jdt.debug/tools.jar"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.jdt.debug/tools.jar"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.compare/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ltk.core.refactoring/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ltk.ui.refactoring/@dot"/>
+			</classpath>
+			<src path="serial support/"			/>
+			</javac>
+		<!-- Copy necessary resources -->
+		<copy todir="${temp.folder}/serialsupport.jar.bin" failonerror="true" overwrite="false">
+			<fileset dir="serial support/" excludes="**/*.java, **/package.htm*,null"			/>
+		</copy>
+		<mkdir dir="${build.result.folder}"/>
+		<jar destfile="${build.result.folder}/serialsupport.jar" basedir="${temp.folder}/serialsupport.jar.bin"/>
+		<delete dir="${temp.folder}/serialsupport.jar.bin"/>
+	</target>
+
+	<target name="serialsupportsrc.zip" depends="init" unless="serialsupportsrc.zip">
+		<mkdir dir="${build.result.folder}"/>
+		<zip destfile="${build.result.folder}/serialsupportsrc.zip" filesonly="false" whenempty="skip" update="false">
+			<fileset dir="serial support/" includes="**/*.java"			/>
+		</zip>
+	</target>
+
+	<target name="@dot" depends="init" unless="@dot" description="Create jar: org.eclipse.jdt.ui @dot.">
+		<delete dir="${temp.folder}/@dot.bin"/>
+		<mkdir dir="${temp.folder}/@dot.bin"/>
+		<!-- compile the source code -->
+		<javac destdir="${temp.folder}/@dot.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bootclasspath}" source="${javacSource}" target="${javacTarget}"		>
+			<compilerarg line="${compilerArg}"/>
+			<classpath>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui/@dot"/>
+				<pathelement path="../org.eclipse.ui.carbon/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.carbon/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.runtime/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.osgi/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.help/@dot"/>
+				<pathelement path="../org.eclipse.swt/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt/@dot"/>
+				<pathelement path="../org.eclipse.swt.gtk.linux.x86_64/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.linux.x86_64/@dot"/>
+				<pathelement path="../org.eclipse.swt.win32.win32.x86/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.win32.win32.x86/@dot"/>
+				<pathelement path="../org.eclipse.swt.gtk.linux.x86/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.linux.x86/@dot"/>
+				<pathelement path="../org.eclipse.swt.gtk.solaris.sparc/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.solaris.sparc/@dot"/>
+				<pathelement path="../org.eclipse.swt.gtk.linux.ppc/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.linux.ppc/@dot"/>
+				<pathelement path="../org.eclipse.swt.carbon.macosx.ppc/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.carbon.macosx.ppc/@dot"/>
+				<pathelement path="../org.eclipse.swt.motif.aix.ppc/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.motif.aix.ppc/@dot"/>
+				<pathelement path="../org.eclipse.swt.motif.hpux.PA_RISC/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.motif.hpux.PA_RISC/@dot"/>
+				<pathelement path="../org.eclipse.swt.motif.linux.x86/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.motif.linux.x86/@dot"/>
+				<pathelement path="../org.eclipse.swt.gtk.linux.ia64/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.gtk.linux.ia64/@dot"/>
+				<pathelement path="../org.eclipse.swt.motif.solaris.sparc/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.motif.solaris.sparc/@dot"/>
+				<pathelement path="../org.eclipse.swt.photon.qnx.x86/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.photon.qnx.x86/@dot"/>
+				<pathelement path="../org.eclipse.swt.motif.hpux.ia64_32/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.motif.hpux.ia64_32/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.jface/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.commands/bin/"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.commands/@dot"/>
+				<pathelement path="../org.eclipse.ui.workbench/compatibility.jar"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.workbench/compatibility.jar"/>
+				<pathelement path="../org.eclipse.ui.workbench/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.workbench/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.workbench.compatibility/compatibility.jar"/>
+				<pathelement path="../org.eclipse.ui.workbench.compatibility/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.workbench.compatibility/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.expressions/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.resources/@dot"/>
+				<pathelement path="../org.eclipse.core.resources.compatibility/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.resources.compatibility/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.resources.compatibility/bin/"/>
+				<pathelement path="../org.eclipse.core.resources.hpux/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.resources.hpux/@dot"/>
+				<pathelement path="../org.eclipse.core.resources.linux/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.resources.linux/@dot"/>
+				<pathelement path="../org.eclipse.core.resources.macosx/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.resources.macosx/@dot"/>
+				<pathelement path="../org.eclipse.core.resources.qnx/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.resources.qnx/@dot"/>
+				<pathelement path="../org.eclipse.core.resources.win32/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.resources.win32/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.resources.win32/bin/"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.runtime.compatibility/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.update.configurator/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ant.core/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.variables/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.console/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.jface.text/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.text/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.workbench.texteditor/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.jdt.core/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.team.core/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.search/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.ide/@dot"/>
+				<pathelement path="../org.eclipse.ui.win32/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.win32/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.views/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.update.core/@dot"/>
+				<pathelement path="../org.eclipse.update.core.linux/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.update.core.linux/@dot"/>
+				<pathelement path="../org.eclipse.update.core.win32/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.update.core.win32/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.update.ui/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.forms/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ui.editors/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.core.filebuffers/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.debug.core/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.debug.ui/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.jdt.launching/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.jdt.debug/jdi.jar"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.jdt.debug/jdimodel.jar"/>
+				<pathelement path="../org.eclipse.jdt.debug/tools.jar"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.jdt.debug/tools.jar"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.compare/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ltk.core.refactoring/@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.ltk.ui.refactoring/@dot"/>
+				<pathelement path="${build.result.folder}/bin/"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.jdt.ui/bin/"/>
+				<pathelement path="${build.result.folder}/serialsupport.jar"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.jdt.ui/serialsupport.jar"/>
+			</classpath>
+			<src path="core refactoring/"			/>
+			<src path="ui/"			/>
+			<src path="ui refactoring/"			/>
+			<src path="core extension/"			/>
+			</javac>
+		<!-- Copy necessary resources -->
+		<copy todir="${temp.folder}/@dot.bin" failonerror="true" overwrite="false">
+			<fileset dir="core refactoring/" excludes="**/*.java, **/package.htm*,null"			/>
+			<fileset dir="ui/" excludes="**/*.java, **/package.htm*,null"			/>
+			<fileset dir="ui refactoring/" excludes="**/*.java, **/package.htm*,null"			/>
+			<fileset dir="core extension/" excludes="**/*.java, **/package.htm*,null"			/>
+		</copy>
+		<mkdir dir="${build.result.folder}"/>
+		<copy todir="${build.result.folder}/@dot" failonerror="true" overwrite="false">
+			<fileset dir="${temp.folder}/@dot.bin"			/>
+		</copy>
+		<delete dir="${temp.folder}/@dot.bin"/>
+	</target>
+
+	<target name="src.zip" depends="init" unless="src.zip">
+		<mkdir dir="${build.result.folder}"/>
+		<zip destfile="${build.result.folder}/src.zip" filesonly="false" whenempty="skip" update="false">
+			<fileset dir="core refactoring/" includes="**/*.java"			/>
+			<fileset dir="ui/" includes="**/*.java"			/>
+			<fileset dir="ui refactoring/" includes="**/*.java"			/>
+			<fileset dir="core extension/" includes="**/*.java"			/>
+		</zip>
+	</target>
+
+	<target name="build.jars" depends="init" description="Build all the jars for the plug-in: org.eclipse.jdt.ui.">
+		<available property="serialsupport.jar" file="${build.result.folder}/serialsupport.jar"/>
+		<antcall target="serialsupport.jar"/>
+		<available property="@dot" file="${build.result.folder}/@dot"/>
+		<antcall target="@dot"/>
+	</target>
+
+	<target name="build.sources" depends="init">
+		<available property="serialsupportsrc.zip" file="${build.result.folder}/serialsupportsrc.zip"/>
+		<antcall target="serialsupportsrc.zip"/>
+		<available property="src.zip" file="${build.result.folder}/src.zip"/>
+		<antcall target="src.zip"/>
+	</target>
+
+	<target name="gather.bin.parts" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/org.eclipse.jdt.ui_3.1.0"/>
+		<copy todir="${destination.temp.folder}/org.eclipse.jdt.ui_3.1.0" failonerror="true" overwrite="false">
+			<fileset dir="${build.result.folder}" includes="serialsupport.jar,null"			/>
+		</copy>
+		<copy todir="${destination.temp.folder}/org.eclipse.jdt.ui_3.1.0" failonerror="true" overwrite="false">
+			<fileset dir="${build.result.folder}/@dot" includes="**"			/>
+		</copy>
+		<copy todir="${destination.temp.folder}/org.eclipse.jdt.ui_3.1.0" failonerror="true" overwrite="false">
+			<fileset dir="${basedir}" includes="plugin.xml,about.html,.options,JavadocHoverStyleSheet.css,JavadocViewStyleSheet.css,icons/,templates/,plugin.properties,null,dictionaries/,serialsupport.jar,META-INF/"			/>
+		</copy>
+	</target>
+
+	<target name="build.zips" depends="init">
+	</target>
+
+	<target name="gather.sources" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/org.eclipse.jdt.ui_3.1.0"/>
+		<copy file="${build.result.folder}/src.zip" todir="${destination.temp.folder}/org.eclipse.jdt.ui_3.1.0" failonerror="false" overwrite="false"/>
+		<copy file="${build.result.folder}/serialsupportsrc.zip" todir="${destination.temp.folder}/org.eclipse.jdt.ui_3.1.0" failonerror="false" overwrite="false"/>
+		<copy todir="${destination.temp.folder}/org.eclipse.jdt.ui_3.1.0" failonerror="false" overwrite="false">
+			<fileset dir="${basedir}" includes="about.html,schema/,dictionaries/"			/>
+		</copy>
+	</target>
+
+	<target name="gather.logs" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/org.eclipse.jdt.ui_3.1.0"/>
+		<copy file="${temp.folder}/@dot.bin.log" todir="${destination.temp.folder}/org.eclipse.jdt.ui_3.1.0" failonerror="false" overwrite="false"/>
+		<copy file="${temp.folder}/serialsupport.jar.bin.log" todir="${destination.temp.folder}/org.eclipse.jdt.ui_3.1.0" failonerror="false" overwrite="false"/>
+	</target>
+
+	<target name="clean" depends="init" description="Clean the plug-in: org.eclipse.jdt.ui of all the zips, jars and logs created.">
+		<delete dir="${build.result.folder}/@dot"/>
+		<delete file="${build.result.folder}/src.zip"/>
+		<delete file="${build.result.folder}/serialsupport.jar"/>
+		<delete file="${build.result.folder}/serialsupportsrc.zip"/>
+		<delete file="${plugin.destination}/org.eclipse.jdt.ui_3.1.0.jar"/>
+		<delete file="${plugin.destination}/org.eclipse.jdt.ui_3.1.0.zip"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="refresh" depends="init" if="eclipse.running" description="Refresh this folder.">
+		<eclipse.convertPath fileSystemPath="/builds/I/src/plugins/org.eclipse.jdt.ui" property="resourcePath"/>
+		<eclipse.refreshLocal resource="${resourcePath}" depth="infinite"/>
+	</target>
+
+	<target name="zip.plugin" depends="init" description="Create a zip containing all the elements for the plug-in: org.eclipse.jdt.ui.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="build.sources"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<antcall target="gather.sources">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<delete>
+			<fileset dir="${temp.folder}" includes="**/*.bin.log"			/>
+		</delete>
+		<zip destfile="${plugin.destination}/org.eclipse.jdt.ui_3.1.0.zip" basedir="${temp.folder}" filesonly="true" whenempty="skip" update="false"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+</project>

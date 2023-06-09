@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %linuxFragmentName
+Bundle-SymbolicName: org.eclipse.core.resources.linux
+Bundle-Version: 3.1.0
+Bundle-Vendor: %providerName
+Fragment-Host: org.eclipse.core.resources;bundle-version="[3.1.0,4.0.0)"
+Bundle-Localization: plugin
+Eclipse-PlatformFilter: (osgi.os=linux)

@@ -1,0 +1,266 @@
+<html>
+<head>
+<title>Eclipse Source Builds</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="../../../default_style.css" type="text/css">
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000">
+
+<h1> Eclipse Source Builds (Source from Zip)</h1>
+<h2>Table of Contents</h2>
+<ol>
+  <li><a href="#whatis">What is an Eclipse source build?</a></li>
+  <li><a href="#gettingsource">Getting the source</a></li>
+  <li><a href="#eclipseinant">Building Eclipse using Ant</a></li>
+  <li><a href="#bootclasspath">Setting the bootclasspath</a></li>
+  <li><a href="#build_platforms">Supported build platforms</a></li>
+  <li><a href="#limitations">Known limitations</a></li>
+</ol>
+<p>&nbsp;</p>
+<h2><a name="whatis"></a>What is an Eclipse Source Build?</h2>
+<p>Eclipse source builds provide developers with an automated method for compiling 
+  the Java code, generating javadoc, and finally, creating a zip file of an Eclipse 
+  runtime from a downloaded source tree. The end result of a source build is a 
+  runnable Eclipse.</p>
+<p>&nbsp;</p>
+<h2><a name="gettingsource"></a>Getting the Source</h2>
+<p>This source build download contains all the Java code, non-Java resources, 
+  and scripts that build a particular version of Eclipse. Although you can manually 
+  edit build.xml files in each feature and plug-in, they are typically generated 
+  by the Eclipse pde-build plug-in. As a result you will need to download a fresh 
+  source build zip file when major changes occur to Eclipse source, such as the 
+  addition or removal of plug-ins. The version of Eclipse a particular source 
+  build will create is embedded in the source build zip file name. For example, 
+  eclipse-sourceBuild-srcIncluded-3.0.zip builds Eclipse version 3.0 </p>
+<p>&nbsp;</p>
+<h2><a name="eclipseinant"></a>Building Eclipse using Ant and a JDK</h2>
+<h4>Description</h4>
+<p>Produces an Eclipse SDK using the Java compiler you have installed.</p>
+<h4>System Requirements</h4>
+<ol>
+  <li><a href="http://ant.apache.org/">Ant 1.6.1</a> or higher</li>
+  <li><a href="http://java.sun.com/j2se/1.4/download.html">JDK 1.4</a></li>
+  <li><a target="extra" href="http://www.info-zip.org/pub/infozip/">Info-Zip</a> 
+    zip and unzip executables on system path. Tar for *nix distributions</li>
+  <li>600 meg free disk space</li>
+  <li>Source build zip from <a href="http://www.eclipse.org/downloads">eclipse.org</a></li>
+</ol>
+<h4>Initial Setup</h4>
+Install Ant and a JDK as per each program's instructions. Minimally you will need 
+the following environment variables set. 
+<ol>
+  <li>Add the Ant bin directory to your path.</li>
+  <li>Set the JAVA_HOME environment variable to the root of your JDK installation.</li>
+  <li>Set the ANT_HOME environment variable to the root of your Ant installation.</li>
+  <li>(Windows 98) Increase the default environment space as specified <a href="http://support.microsoft.com/default.aspx?scid=kb;EN-US;q230205">here</a>.</li>
+</ol>
+<h4>Run the Build</h4>
+<ol>
+  <li>Extract the eclipse-sourceBuild-srcIncluded-*.zip to an empty directory. Extract using tar if using a *nix drop.</li>
+  <li>cd to the directory.</li>
+  <li>Execute <b>build -os &lt;osType&gt; -ws &lt;windowSystemType&gt; -arch &lt;architecture&gt; 
+    [-bc &lt;bootclasspath&gt;] [-compilelibs] [-target &lt;target&gt;]</b></li>
+  <p>&nbsp;</p>
+  <ol>
+    <table width="75%" border="1">
+      <tr> 
+        <td width="30%">Parameter Name</td>
+        <td width="70%">Description</td>
+      </tr>
+      <tr> 
+        <td width="30%">osType</td>
+        <td width="70%">Target operating system (<a href="#build_platforms">See 
+          supported types</a>).</td>
+      </tr>
+      <tr> 
+        <td width="30%">windowSystemType</td>
+        <td width="70%">Target windowing system (<a href="#build_platforms">See 
+          supported types</a>).</td>
+      </tr>
+      <tr> 
+        <td width="30%">architecture</td>
+        <td width="70%">Target system architecture (<a href="#build_platforms">See 
+          supported types</a>).</td>
+      </tr>
+      <tr> 
+        <td width="30%">bootclasspath (optional)</td>
+        <td width="70%">The list of bootclasspath jars to compile against using 
+          either a colon or semi-colon as separators. The jars that make up a 
+          bootclasspath are part of any JDK or JRE. Typically this parameter is 
+          only specified if you are cross compiling Eclipse or using a JDK which 
+          does not use a &quot;rt.jar&quot; to contain the java libraries. The 
+          default is the rt.jar on your path.</td>
+      </tr>
+	   <tr> 
+        <td width="30%">compilelibs</td>
+        <td width="70%">Flag to force the recompilation of native libraries.</td>
+      </tr>
+      <tr> 
+        <td width="30%">target (optional)</td>
+        <td width="70%"> 
+          <p>The Ant target from build.xml to execute. The default target is <b>run</b> 
+            and performs a complete build and generates an install. Other valid 
+            targets are:</p>
+          <ul>
+            <li>compile (compiles Java code and generates javadoc)</li>
+            <li>clean</li>
+            <li>install</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </ol>
+</ol>
+<p><b><br>
+  Install Eclipse</b></p>
+<p>When the Eclipse build is complete, there will be a zip file called</p>
+<p>&lt;osType&gt;-&lt;windowSystemType&gt;-&lt;architecture&gt;-sdk.zip</p>
+
+<p>in the results subdirectory of your build directory.
+If you are building for Linux or Mac, there will be a tar.gz file. </p>
+<p>Extract this file to the directory where you would like to run Eclipse. If 
+  you extract it to your root directory, a directory called eclipse will be created. 
+</p>
+<p>Run Eclipse with the <a href="http://help.eclipse.org/help21/index.jsp?topic=/org.eclipse.platform.doc.user/tasks/running_eclipse.htm">desired 
+  command line parameters</a>.<br>
+  <br>
+</p>
+<h2><b><a name="build_platforms"></a></b><b>Supported Platforms</b> </h2>
+<p>Eclipse can be built on any of the following platforms. With some <a href="#limitations">limitations</a> 
+  any platform can be used to build Eclipse for any or all supported platforms.</p>
+<table width="67%" border="1" height="228">
+  <tr> 
+    <td width="48%">Operating System (os)</td>
+    <td width="52%">Windowing System (ws)</td>
+    <td width="52%">Architecture(arch)</td>
+  </tr>
+  <tr> 
+    <td width="48%">win32</td>
+    <td width="52%">win32</td>
+    <td width="52%">x86</td>
+  </tr>
+  <tr> 
+    <td width="48%">linux</td>
+    <td width="52%">gtk</td>
+    <td width="52%">x86</td>
+  </tr>
+  <tr> 
+    <td width="48%">linux</td>
+    <td width="52%">gtk</td>
+    <td width="52%">ppc</td>
+  </tr>
+   <tr> 
+    <td width="48%">linux</td>
+    <td width="52%">gtk</td>
+    <td width="52%">ppc64</td>
+  </tr>
+  <tr> 
+    <td width="48%">linux</td>
+    <td width="52%">gtk</td>
+    <td width="52%">x86_64</td>
+  </tr>
+   <tr> 
+    <td width="48%">linux</td>
+    <td width="52%">gtk</td>
+    <td width="52%">ia64</td>
+  </tr>
+  <tr> 
+    <td width="48%">linux</td>
+    <td width="52%">motif</td>
+    <td width="52%">x86</td>
+  </tr>
+  <tr> 
+    <td width="48%">macosx</td>
+    <td width="52%">carbon</td>
+    <td width="52%">ppc</td>
+  </tr>
+  <tr> 
+    <td width="48%">aix</td>
+    <td width="52%"> 
+      <p>motif</p>
+    </td>
+    <td width="52%">ppc</td>
+  </tr>
+  <tr> 
+    <td width="48%">hpux</td>
+    <td width="52%">motif</td>
+    <td width="52%">PA_RISC</td>
+  </tr>
+  <tr> 
+    <td width="48%">hpux</td>
+    <td width="52%">motif</td>
+    <td width="52%">ia64_32</td>
+  </tr>
+  <tr> 
+    <td width="48%">qnx</td>
+    <td width="52%">photon</td>
+    <td width="52%">x86</td>
+  </tr>
+  <tr> 
+    <td width="48%">solaris</td>
+    <td width="52%">motif</td>
+    <td width="52%">sparc</td>
+  </tr>
+   <tr> 
+    <td width="48%">solaris</td>
+    <td width="52%">gtk</td>
+    <td width="52%">sparc</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<h2><a name="limitations"></a>Known Limitations </h2>
+<ol>
+  <li>Building unix flavours of Eclipse on Windows will result in incorrect file 
+    permissions. The *.so, *.sl, and Eclipse executable files will not have execute 
+    permissions. In addition, linux-motif and linux-gtk builds will not have soft 
+    links to libXm.so.2.1 in the installation root directory. In these cases you 
+    would have to write an install or post install script to set permissions properly. 
+    (UNIX builds built on UNIX systems will set sufficient permissions and make 
+    the appropriate soft links).</li>
+  <li>Only Java source code is compiled. *.dll, *so, *sl and Eclipse executables
+     are all provided prebuilt in this build process. The linux-gtk-ppc64, linux-gtk-ia64, hpux-motif-ia64_32 and hpux-motif-ia64 configurations will require 
+	a re-compilation of the eclipse executable and swt libaries and copying these files to the apppropriate directories.
+	This can be accomplished by using the -compilelibs flag when running the build.  The instructions on  <a href="http://dev.eclipse.org/viewcvs/index.cgi/%7Echeckout%7E/platform-swt-home/faq.html#buildeclipseexe">recompiling
+    the eclipse executable</a> and <a href="http://dev.eclipse.org/viewcvs/index.cgi/%7Echeckout%7E/platform-swt-home/faq.html#howbuilddll">recompiling
+    the swt libraries</a>  available in the <a href="http://dev.eclipse.org/viewcvs/index.cgi/%7Echeckout%7E/platform-swt-home/faq.html">SWT
+    FAQ</a> are also a useful reference. This document also includes a list of the prerequisites <a href="http://dev.eclipse.org/viewcvs/index.cgi/%7Echeckout%7E/platform-swt-home/faq.html#gtkstartup">for
+    running  SWT on Linux GTK</a> </li>
+	<li>If you wish to use a 1.5 JDK to build Eclipse, change the value for javacSource to 1.4 in the build.xml of your source build.</li>
+
+<property name="javacSource" value="1.4" /></li>
+</ol>
+<p>&nbsp;</p>
+</p><h2><a name="port"></a>Using the source build to construct a new Eclipse
+  port</h2>
+<p>The Eclipse platform releng team has limited hardware, software and time to compile Eclipse on every conceivable platform. If you would like to enhance
+  the source build scripts to build eclipse on a platform
+  that is not currently included, please follow the following steps:</p>
+<ul><li>Extract the source build drop</li>
+<li>Update the build.bat and build files to reflect the new architecture. For
+  example: <ul>
+  <li>in the <tt>build</tt> file: add an another entry to the <tt>if [ &quot;$os-$ws-$arch&quot; = &quot;linux-motif-x86&quot; ]
+    </tt>line similar to <tt>|| [ &quot;$os-$ws-$arch&quot; = &quot;newOs-newWs-newArch&quot;]
+    </tt>that reflects the new os-ws-arch combination</li>
+	<li>in the <tt>build.bat</tt> file:
+add an entry similar to <tt>if %os%-%ws%-%arch%==NewOs-newWs-newArch goto run</tt> that reflects the new os-ws-arch combination</li>
+  </ul> 
+</li>
+<li>Copy an existing <tt>assemble.org.eclipse.sdk.os.ws.arch.xml</tt> script to a new one that
+  indicates that platform being built</li>
+ <li>In the <tt>build.xml</tt></li><ul>
+    <li>update the compilelibs property in the init target to reflect the new
+      architecture</li>
+    <li>update the compilelibs target to reflect the new architecture</li></ul>
+<li>Run the build using &quot;build -compilelibs&quot; to force the recompilation
+  of the native libaries</li>
+  <li>Patches may be required to the swt native library and launcher build scripts
+    to compile the new port. The swt native library files
+    and launcher source and build files are stored in the <tt>swttmp</tt> and <tt>launchertmp</tt>
+    directories respectively.</li>
+  <li>Please open a bug with platform-releng with patches required to build this platform so they can be included in future source
+  builds. This allows others to use your contribution and compile the new eclipse
+  port<br>
+ </p> </ul>
+</body>
+</html>

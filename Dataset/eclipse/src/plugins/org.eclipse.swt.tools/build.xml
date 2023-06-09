@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.eclipse.swt.tools" default="build.jars" basedir=".">
+
+	<property name="basews" value="${ws}"/>
+	<property name="baseos" value="${os}"/>
+	<property name="basearch" value="${arch}"/>
+	<property name="basenl" value="${nl}"/>
+
+	<!-- Compiler settings. -->
+	<property name="javacFailOnError" value="false"/>
+	<property name="javacDebugInfo" value="on"/>
+	<property name="javacVerbose" value="true"/>
+	<property name="javacSource" value="1.3"/>
+	<property name="javacTarget" value="1.2"/>
+	<property name="compilerArg" value=""/>
+	<path id="path_bootclasspath">
+		<fileset dir="${java.home}/lib">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	<property name="bootclasspath" refid="path_bootclasspath"/>
+
+	<target name="init" depends="properties">
+		<condition property="pluginTemp" value="${buildTempFolder}/plugins">
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="pluginTemp" value="${basedir}"/>
+		<condition property="build.result.folder" value="${pluginTemp}/org.eclipse.swt.tools">
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="build.result.folder" value="${basedir}"/>
+		<property name="temp.folder" value="${basedir}/temp.folder"/>
+		<property name="plugin.destination" value="${basedir}"/>
+	</target>
+
+	<target name="properties" if="eclipse.running">
+		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+
+	</target>
+
+	<target name="build.update.jar" depends="init" description="Build the plug-in: org.eclipse.swt.tools for an update site.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<zip destfile="${plugin.destination}/org.eclipse.swt.tools_3.1.0.jar" basedir="${temp.folder}/org.eclipse.swt.tools_3.1.0" filesonly="false" whenempty="skip" update="false"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="swttools.jar" depends="init" unless="swttools.jar" description="Create jar: org.eclipse.swt.tools swttools.jar.">
+		<delete dir="${temp.folder}/swttools.jar.bin"/>
+		<mkdir dir="${temp.folder}/swttools.jar.bin"/>
+		<!-- compile the source code -->
+		<javac destdir="${temp.folder}/swttools.jar.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bootclasspath}" source="${javacSource}" target="${javacTarget}"		>
+			<compilerarg line="${compilerArg}"/>
+			<classpath>
+				<pathelement path="../org.eclipse.swt/@dot"/>
+				<pathelement path="../org.eclipse.swt.gtk.linux.x86_64/@dot"/>
+				<pathelement path="../org.eclipse.swt.win32.win32.x86/@dot"/>
+				<pathelement path="../org.eclipse.swt.gtk.linux.x86/@dot"/>
+				<pathelement path="../org.eclipse.swt.gtk.solaris.sparc/@dot"/>
+				<pathelement path="../org.eclipse.swt.gtk.linux.ppc/@dot"/>
+				<pathelement path="../org.eclipse.swt.carbon.macosx.ppc/@dot"/>
+				<pathelement path="../org.eclipse.swt.motif.aix.ppc/@dot"/>
+				<pathelement path="../org.eclipse.swt.motif.hpux.PA_RISC/@dot"/>
+				<pathelement path="../org.eclipse.swt.motif.linux.x86/@dot"/>
+				<pathelement path="../org.eclipse.swt.gtk.linux.ia64/@dot"/>
+				<pathelement path="../org.eclipse.swt.motif.solaris.sparc/@dot"/>
+				<pathelement path="../org.eclipse.swt.photon.qnx.x86/@dot"/>
+				<pathelement path="../org.eclipse.swt.motif.hpux.ia64_32/@dot"/>
+				<pathelement path="../org.eclipse.core.runtime.compatibility/@dot"/>
+				<pathelement path="../org.eclipse.core.runtime/@dot"/>
+				<pathelement path="../org.eclipse.osgi/@dot"/>
+				<pathelement path="../org.eclipse.update.configurator/@dot"/>
+				<pathelement path="@dot"/>
+				<pathelement path="${build.result.folder}/../org.eclipse.swt.tools/@dot"/>
+			</classpath>
+			<src path="JNI Generation/"			/>
+			</javac>
+		<!-- Copy necessary resources -->
+		<copy todir="${temp.folder}/swttools.jar.bin" failonerror="true" overwrite="false">
+			<fileset dir="JNI Generation/" excludes="**/*.java, **/package.htm*,null"			/>
+		</copy>
+		<mkdir dir="${build.result.folder}"/>
+		<jar destfile="${build.result.folder}/swttools.jar" basedir="${temp.folder}/swttools.jar.bin"/>
+		<delete dir="${temp.folder}/swttools.jar.bin"/>
+	</target>
+
+	<target name="swttoolssrc.zip" depends="init" unless="swttoolssrc.zip">
+		<mkdir dir="${build.result.folder}"/>
+		<zip destfile="${build.result.folder}/swttoolssrc.zip" filesonly="false" whenempty="skip" update="false">
+			<fileset dir="JNI Generation/" includes="**/*.java"			/>
+		</zip>
+	</target>
+
+	<target name="build.jars" depends="init" description="Build all the jars for the plug-in: org.eclipse.swt.tools.">
+		<available property="swttools.jar" file="${build.result.folder}/swttools.jar"/>
+		<antcall target="swttools.jar"/>
+	</target>
+
+	<target name="build.sources" depends="init">
+		<available property="swttoolssrc.zip" file="${build.result.folder}/swttoolssrc.zip"/>
+		<antcall target="swttoolssrc.zip"/>
+	</target>
+
+	<target name="gather.bin.parts" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/org.eclipse.swt.tools_3.1.0"/>
+		<copy todir="${destination.temp.folder}/org.eclipse.swt.tools_3.1.0" failonerror="true" overwrite="false">
+			<fileset dir="${build.result.folder}" includes="swttools.jar"			/>
+		</copy>
+	</target>
+
+	<target name="build.zips" depends="init">
+	</target>
+
+	<target name="gather.sources" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/org.eclipse.swt.tools_3.1.0"/>
+		<copy file="${build.result.folder}/swttoolssrc.zip" todir="${destination.temp.folder}/org.eclipse.swt.tools_3.1.0" failonerror="false" overwrite="false"/>
+	</target>
+
+	<target name="gather.logs" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/org.eclipse.swt.tools_3.1.0"/>
+		<copy file="${temp.folder}/swttools.jar.bin.log" todir="${destination.temp.folder}/org.eclipse.swt.tools_3.1.0" failonerror="false" overwrite="false"/>
+	</target>
+
+	<target name="clean" depends="init" description="Clean the plug-in: org.eclipse.swt.tools of all the zips, jars and logs created.">
+		<delete file="${build.result.folder}/swttools.jar"/>
+		<delete file="${build.result.folder}/swttoolssrc.zip"/>
+		<delete file="${plugin.destination}/org.eclipse.swt.tools_3.1.0.jar"/>
+		<delete file="${plugin.destination}/org.eclipse.swt.tools_3.1.0.zip"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="refresh" depends="init" if="eclipse.running" description="Refresh this folder.">
+		<eclipse.convertPath fileSystemPath="/builds/I/src/plugins/org.eclipse.swt.tools" property="resourcePath"/>
+		<eclipse.refreshLocal resource="${resourcePath}" depth="infinite"/>
+	</target>
+
+	<target name="zip.plugin" depends="init" description="Create a zip containing all the elements for the plug-in: org.eclipse.swt.tools.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="build.sources"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<antcall target="gather.sources">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<delete>
+			<fileset dir="${temp.folder}" includes="**/*.bin.log"			/>
+		</delete>
+		<zip destfile="${plugin.destination}/org.eclipse.swt.tools_3.1.0.zip" basedir="${temp.folder}" filesonly="true" whenempty="skip" update="false"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+</project>
