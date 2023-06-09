@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Bundle-Name: %pluginName
-Bundle-SymbolicName: org.eclipse.jdt.source.linux.gtk.x86_64; singleton=true
-Bundle-Version: 3.1.0
-Fragment-Host: org.eclipse.jdt.source;bundle-version="3.1.0"
-Bundle-Localization: plugin
-Bundle-Vendor: %providerName
