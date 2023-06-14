@@ -10,6 +10,7 @@ import shutil
 import numpy as np
 import torch
 import pickle
+import xml.etree.ElementTree as ET
 
 root_dir = os.path.join(os.getcwd(), "..")
 all_dataset_dir = os.path.join(root_dir, "all_datasets")
@@ -31,3 +32,4 @@ black_list_file = ['/Users/qihongchen/Desktop/PyTracer/src/../all_repos/Lang/src
 is_building = True
 is_evaluate = True
 is_download = False
+read_mode = 'csv' # either xml or csv

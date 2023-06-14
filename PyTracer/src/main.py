@@ -62,12 +62,16 @@ def rank_source_code_files(ticket_id, source_code_list, repo_name):
 
 
 if __name__ == '__main__':
-    path = "path_to_dataset"
+
     download_repos()
     target_tickets_list = read_from_txt(working_ticket_ids_dir)
-    for bug in ET.parse(path+"BugRepository.xml").getroot():
-        target_tickets_list[bug.attrib["id"]] = bug[0][1].text + '\n' + bug[0][0].text
-    ticket_repos_dict = load_ticket_repos_dict()
+    if read_mode == 'xml':
+        path = "path_to_dataset"
+        ticket_repos_dict = defaultdict(str)
+        for bug in ET.parse(path+"BugRepository.xml").getroot():
+            ticket_repos_dict[bug.attrib["id"]] = bug[0][1].text + '\n' + bug[0][0].text
+    else:
+        ticket_repos_dict = load_ticket_repos_dict()
     if is_building:
         make_folder(ticket_rank_result_dir)
         make_folder(source_code_embedding_collection_dir)

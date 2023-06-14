@@ -1,6 +1,7 @@
 # PyTracer - New modification
 
 all_datasets/combined_dataset.csv: contains ticket_id, issue_id, resolved, description, summary, created, commit_info
+all_datasets/combined_dataset.xml: contains ticket_id, issue_id, resolved, description, summary, created, commit_info
 all_datasets/target_ticket_ids.txt: list of target_ticket_ids
 all_datasets/ticket_repo.csv: contains: ticket_id, list of repo
 
@@ -12,14 +13,14 @@ all_repos/: folder containing all repos
 
 Final results store in ranked_results/: one ticket per txt file, each line in the txt file containing source code file dir and similarities.
 
-If first time usage: change is_building in config.py to True
+If first time usage: change is_building in config.py to True. If want to read from xml file, change read_mode in config.py to xml.
 
 Usage: Put the repos, and csv into the right folder as described above and then run PyTracer/PyTracer/src/main.py
 
 
 This is a modification add on to the BrTracer implementation. It computes the file similarity for each source code file.
 It follows the steps below:
-1. load tickets and generate vector embedding using codebert model.
+1. load tickets from xml file or csv file and generate vector embedding using codebert model.
 2. for every repo, find all java files.
 3. for every single file, extract all methods. 
 4. generate vector embedding for every method using codebert model.
