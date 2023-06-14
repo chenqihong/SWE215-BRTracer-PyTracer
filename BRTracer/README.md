@@ -11,3 +11,5 @@ We make the following main contributions in BRTracer:
 * A novel approach based on segmentation and stack-trace analysis for bug-report-oriented fault localization.
 * An empirical evaluation using three non-trivial projects (i.e., Eclipse, AspectJ and SWT) together with 3459 bug reports, demonstrating the superiority of our approach over BugLocator, which is by far the most advanced approach.
 * Combine results from both information retrieval techniques(this BRTracer) and context embedding techniques(PyTracer)
+
+Usage: Run /src/BRTracer.java with the path to the data as a parameter.
