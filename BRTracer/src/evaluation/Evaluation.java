@@ -152,13 +152,16 @@ public class Evaluation {
 			}
 
 
-			Rank[] sort = this.sort(finalscore);
+			
 
 			TreeSet<String> fileSet = fixTable.get(vsmId);
 			Iterator<String> fileIt = fileSet.iterator();
 			Hashtable<Integer, String> fileIdTable = new Hashtable<>();
+			int i = 0;
 			while (fileIt.hasNext()) {
+				i++;
 				String fileName = fileIt.next();
+				Scanner scanner = new Scanner(new File("path to Pytracer results/"+fileName));
 				Integer fileId = idTable.get(fileName);
 				if(fileId==null || fileName==null){
 					System.out.println("null pointer");
@@ -166,7 +169,9 @@ public class Evaluation {
 					continue;
 				}
 				fileIdTable.put(fileId, fileName);
+				finalscore[i] = finalscore[i] + scanner.nextFloat();;
 			}
+			Rank[] sort = this.sort(finalscore);
 			for (int i = 0; i < sort.length; i++) {
 				Rank rank = sort[i];
 				if ((!fileIdTable.isEmpty())
