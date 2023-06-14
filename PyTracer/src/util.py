@@ -99,27 +99,34 @@ def extract_source_code_list(repo_dir):
     return list(set(all_files))
 
 
-def extract_methods(java_code):
-    methods = []
+def extract_methods(java_code_dir):
+    with open(java_code_dir, 'r') as f:
+        java_code = f.read()
+    method_list = []
     lines = java_code.split('\n')
-    i = 0
+    counter = 0
     try:
-        while i < len(lines):
-            line = lines[i].strip()
+        while counter < len(lines):
+            line = lines[counter].strip()
+            if ' class ' in line:
+                counter += 1
+                continue
             if line.startswith('public') or line.startswith('private') or line.startswith('protected'):
                 method_signature = line
                 method_body = ''
-                i += 1
-                while i < len(lines) and not lines[i].strip().endswith('}'):
-                    method_body += lines[i] + '\n'
-                    i += 1
-                method_body += lines[i]
+                counter += 1
+                open_count, close_count = 1, 0
+                while open_count != close_count:
+                    open_count += lines[counter].count("{")
+                    close_count += lines[counter].count("}")
+                    method_body += lines[counter] + '\n'
+                    counter += 1
                 method = method_signature + '\n' + method_body
-                methods.append(method)
-            i += 1
+                method_list.append(method)
+            counter += 1
     except IndexError:
         return [java_code]
-    return methods
+    return method_list
 
 
 def find_close_segment_embed(source_code_file_dir, ticket_id, repo_name):
