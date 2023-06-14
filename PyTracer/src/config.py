@@ -28,6 +28,6 @@ finished_repo_list = list(os.listdir(source_code_embedding_collection_dir))
 ticket_info_dataset_dir = os.path.join(all_dataset_dir, "combined_dataset.csv")
 ticket_repo_dir = os.path.join(all_dataset_dir, "ticket_repo.csv")
 black_list_file = ['/Users/qihongchen/Desktop/PyTracer/src/../all_repos/Lang/src/java/org/apache/commons/lang/Entities.java']
-is_building = False
+is_building = True
 is_evaluate = True
 is_download = False

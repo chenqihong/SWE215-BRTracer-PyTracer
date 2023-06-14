@@ -161,7 +161,7 @@ public class Evaluation {
 			while (fileIt.hasNext()) {
 				i++;
 				String fileName = fileIt.next();
-				Scanner scanner = new Scanner(new File("path to Pytracer results/"+fileName));
+				Scanner scanner = new Scanner(new File("path to Pytracer results/"+fileName)); //path to PyTrace result
 				Integer fileId = idTable.get(fileName);
 				if(fileId==null || fileName==null){
 					System.out.println("null pointer");
